@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:timer_flutter/components/loading_dialog.dart';
@@ -11,7 +11,7 @@ class IpInfoWiget extends StatefulWidget {
 }
 
 class _IpInfoWigetState extends State<IpInfoWiget> {
-  late Future<String> _ipData;
+  late Future<Map<String, dynamic>> _ipData;
 
   @override
   void initState() {
@@ -19,30 +19,24 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
     _ipData = _fetchIpData();
   }
 
-  Future<String> _fetchIpData() async {
-    String ip = await _getIpAddress();
-    final response = await http.get(Uri.parse('https://ip-api.com/json/$ip'));
+  Future<Map<String, dynamic>> _fetchIpData() async {
+    final response = await http.get(Uri.parse('https://api.ipify.org?format=json'));
     if (response.statusCode == 200) {
-      return response.body;
+      final ipData = json.decode(response.body);
+      final ipAddress = ipData['ip'];
+      return _fetchLocationData(ipAddress);
     } else {
       throw Exception('Failed to load IP data');
     }
   }
 
-  Future<String> _getIpAddress() async {
-    String ipAddress = '';
-    try {
-      for (var interface in await NetworkInterface.list()) {
-        for (var addr in interface.addresses) {
-          if (addr.address != '127.0.0.1' && addr.type.name == 'ipv4') {
-            ipAddress = addr.address;
-          }
-        }
-      }
-    } catch (_) {
-      ipAddress = '127.0.0.1';
+  Future<Map<String, dynamic>> _fetchLocationData(String ipAddress) async {
+    final response = await http.get(Uri.parse('https://geolocation-db.com/json/$ipAddress'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load location data');
     }
-    return ipAddress;
   }
 
   @override
@@ -52,7 +46,7 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
         title: const Text('IP Info'),
       ),
       body: Center(
-        child: FutureBuilder<String>(
+        child: FutureBuilder<Map<String, dynamic>>(
           future: _ipData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -60,8 +54,12 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else {
+              final locationData = snapshot.data!;
+              final latitude = locationData['latitude'];
+              final longitude = locationData['longitude'];
+              final locationInfo = 'Latitude: $latitude\nLongitude: $longitude\n';
               return SingleChildScrollView(
-                child: Text(snapshot.data ?? ''),
+                child: Text(locationInfo),
               );
             }
           },
