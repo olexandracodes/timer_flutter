@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:timer_flutter/src/app_styles.dart';
 
@@ -13,24 +12,50 @@ class TimerPage extends StatefulWidget {
 class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   late Timer _timer;
   int _secondsElapsed = 0;
-  double turns = 0.0;
   bool _timerRunning = false;
-  bool isClicked = false;
-  late AnimationController _animationController;
+  late AnimationController _pulseAnimationController;
+  late Animation<double> _pulseAnimation;
+  late AnimationController _shadowAnimationController;
+  late Animation<Color?> _shadowAnimation;
+
+  final List<Color> shadowColors = [
+    AppColors.pastelOrange,
+    AppColors.pastelBlue,
+    AppColors.pastelGreen,
+    AppColors.pastelRed,
+    AppColors.pastelPink,
+    AppColors.pastelPurple,
+    AppColors.pastelTeal,
+  ];
 
   @override
   void initState() {
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 800),
-    );
     super.initState();
+    _pulseAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+    _pulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.1,
+    ).animate(_pulseAnimationController);
+
+    _shadowAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 7000),
+    )..repeat();
+    _shadowAnimation = ColorTween(
+      begin: shadowColors[0],
+      end: shadowColors[shadowColors.length - 1],
+    ).animate(_shadowAnimationController);
+
     _timer = Timer.periodic(const Duration(seconds: 1), _incrementTimer);
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _pulseAnimationController.dispose();
+    _shadowAnimationController.dispose();
     _timer.cancel();
     super.dispose();
   }
@@ -71,69 +96,38 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            AnimatedRotation(
-              turns: turns,
-              curve: Curves.easeInOut,
-              duration: const Duration(
-                seconds: 1,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (isClicked) {
-                      setState(() {
-                        turns -= 1 / 4;
-                        _animationController.reverse();
-                      });
-                    } else {
-                      setState(() {
-                        turns += 1 / 4;
-                        _animationController.forward();
-                      });
-                    }
-                    isClicked = !isClicked;
-                  });
+            GestureDetector(
+              onTap: _toggleTimer,
+              child: AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _pulseAnimation.value,
+                    child: Container(
+                      width: 200,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: AppColors.appSecondaryBackground,
+                        borderRadius: BorderRadius.circular(100),
+                        boxShadow: [
+                          BoxShadow(
+                            color: _shadowAnimation.value!,
+                            spreadRadius: 5,
+                            blurRadius: 20,
+                            offset: const Offset(0, 0),
+                          ),
+                        ],
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.play_arrow,
+                          size: 100,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  );
                 },
-                child: AnimatedContainer(
-                  curve: Curves.easeOutExpo,
-                  duration: const Duration(
-                    seconds: 1,
-                  ),
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: AppColors.appSecondaryBackground,
-                    borderRadius: BorderRadius.circular(
-                      100,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 20,
-                        offset: isClicked ? const Offset(20, -20) : const Offset(20, 20),
-                      ),
-                       BoxShadow(
-                        color: Colors.white,
-                        spreadRadius: -5,
-                        blurRadius: 20,
-                        offset: isClicked ? const Offset(-20, 20) : const Offset(-20, -20),
-                      ),
-                    ],
-                  ),
-                  child: SizedBox(
-                    width: 200,
-                    height: 200,
-                    child: Center(
-                      child: AnimatedIcon(
-                        icon: AnimatedIcons.play_pause,
-                        progress: _animationController,
-                        size: 100,
-                        color: AppColors.appOrange,
-                      ),
-                    ),
-                  ),
-                ),
               ),
             ),
             const SizedBox(height: 20),

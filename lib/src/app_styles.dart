@@ -16,7 +16,7 @@ class AppColors {
       Color.fromARGB(185, 237, 239, 248);
   static const Color itemBackground = Color(0xFFDEE1EF);
 
-  // chart colors
+  // shaddow colors
   static const Color pastelOrange = Color.fromARGB(255, 237, 165, 107); 
   static const Color pastelBlue = Color.fromARGB(222, 121, 148, 245); 
   static const Color pastelGreen = Color.fromARGB(225, 126, 240, 149); 
@@ -24,7 +24,7 @@ class AppColors {
   static const Color pastelPink = Color.fromARGB(239, 255, 135, 175);
   static const Color pastelPurple = Color.fromARGB(241, 174, 138, 231);
   static const Color pastelTeal = Color.fromARGB(236, 81, 242, 237);
-  static const Color pastelGrey = Color.fromARGB(230, 165, 165, 165);
+  static const Color pastelGrey = Color.fromRGBO(165, 165, 165, 0.902);
 
   // text colors
   static const Color appTitle = Color(0xFF1C2120);
