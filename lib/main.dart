@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timer_flutter/pages/homePage.dart';
+import 'package:timer_flutter/pages/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

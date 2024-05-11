@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:timer_flutter/components/loading_dialog.dart';
@@ -19,12 +20,29 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
   }
 
   Future<String> _fetchIpData() async {
-    final response = await http.get(Uri.parse('https://ip-api.com/json'));
+    String ip = await _getIpAddress();
+    final response = await http.get(Uri.parse('https://ip-api.com/json/$ip'));
     if (response.statusCode == 200) {
       return response.body;
     } else {
       throw Exception('Failed to load IP data');
     }
+  }
+
+  Future<String> _getIpAddress() async {
+    String ipAddress = '';
+    try {
+      for (var interface in await NetworkInterface.list()) {
+        for (var addr in interface.addresses) {
+          if (addr.address != '127.0.0.1' && addr.type.name == 'ipv4') {
+            ipAddress = addr.address;
+          }
+        }
+      }
+    } catch (_) {
+      ipAddress = '127.0.0.1';
+    }
+    return ipAddress;
   }
 
   @override

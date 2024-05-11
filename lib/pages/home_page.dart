@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:timer_flutter/data/database.dart';
-// import 'package:timer_flutter/layout/app_bar.dart';
 import 'package:timer_flutter/layout/nav_bar.dart';
-import 'package:timer_flutter/pages/ipInfoWigetPage.dart';
-import 'package:timer_flutter/pages/settingsPage.dart';
-import 'package:timer_flutter/pages/timerWigetPage.dart';
+import 'package:timer_flutter/pages/ip_page.dart';
+import 'package:timer_flutter/pages/settings_page.dart';
+import 'package:timer_flutter/pages/timer_page.dart';
 import 'package:timer_flutter/src/app_styles.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,11 +17,6 @@ class _HomePageState extends State<HomePage> {
   IpDataBase db = IpDataBase();
 
   int _selectedIndex = 0;
-  final timerController = TextEditingController();
-
-  DateTime startDate = DateTime.now();
-  DateTime endDate = DateTime.now();
-  DateTime timestamp = DateTime.now();
 
   Future<void> fetchData() async {
     await db.loadData();
@@ -36,7 +30,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    timerController.dispose();
     super.dispose();
   }
 
@@ -59,7 +52,6 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: AppColors.appMainBackground,
-      // appBar: myAppBar(),
       bottomNavigationBar: bottomNavigationBar(
         _selectedIndex,
         _onTabTapped,
