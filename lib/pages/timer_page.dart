@@ -13,6 +13,7 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   late Timer _timer;
   int _secondsElapsed = 0;
   bool _timerRunning = false;
+  late AnimationController _actionAnimationController;
   late AnimationController _pulseAnimationController;
   late Animation<double> _pulseAnimation;
   late AnimationController _shadowAnimationController;
@@ -40,6 +41,11 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
       end: 1.1,
     ).animate(_pulseAnimationController);
 
+    _actionAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
     _shadowAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 7000),
@@ -56,6 +62,7 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
   void dispose() {
     _pulseAnimationController.dispose();
     _shadowAnimationController.dispose();
+    _actionAnimationController.dispose();
     _timer.cancel();
     super.dispose();
   }
@@ -68,18 +75,33 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
     }
   }
 
-  void _toggleTimer() {
-    setState(() {
-      _timerRunning = !_timerRunning;
-    });
-  }
+void _toggleTimer() {
+  setState(() {
+    _timerRunning = !_timerRunning;
+    if (_timerRunning) {
+      _startActionAnimation();
+    } else {
+      _stopActionAnimation();
+    }
+  });
+}
 
-  void _resetTimer() {
-    setState(() {
-      _secondsElapsed = 0;
-      _timerRunning = false;
-    });
-  }
+void _resetTimer() {
+  setState(() {
+    _secondsElapsed = 0;
+    _timerRunning = false;
+    _stopActionAnimation();
+  });
+}
+
+  void _startActionAnimation() {
+  _actionAnimationController.forward();
+}
+
+void _stopActionAnimation() {
+  _actionAnimationController.reverse();
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -118,13 +140,14 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
                           ),
                         ],
                       ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.play_arrow,
-                          size: 100,
-                          color: AppColors.white,
-                        ),
+                      child: Center(
+                      child: AnimatedIcon(
+                        icon: AnimatedIcons.play_pause,
+                        progress: _actionAnimationController,
+                        size: 100,
+                        color: _timerRunning ? AppColors.lightOrange : AppColors.appOrange,
                       ),
+                    ),
                     ),
                   );
                 },
