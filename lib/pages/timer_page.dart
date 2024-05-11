@@ -75,33 +75,49 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
     }
   }
 
-void _toggleTimer() {
-  setState(() {
-    _timerRunning = !_timerRunning;
-    if (_timerRunning) {
-      _startActionAnimation();
-    } else {
-      _stopActionAnimation();
-    }
-  });
-}
+  void _toggleTimer() {
+    setState(() {
+      _timerRunning = !_timerRunning;
+      if (_timerRunning) {
+        _startActionAnimation();
+        _pulseAnimationController.repeat(reverse: true);
+        _shadowAnimationController.repeat();
+      } else {
+        _stopActionAnimation();
+        _pulseAnimationController.stop();
+        _shadowAnimationController.stop();
+        _pulseAnimationController.reset();
+        _shadowAnimationController.reset();
+      }
+    });
+  }
 
-void _resetTimer() {
-  setState(() {
-    _secondsElapsed = 0;
-    _timerRunning = false;
-    _stopActionAnimation();
-  });
-}
+  void _resetTimer() {
+    setState(() {
+      _secondsElapsed = 0;
+      _timerRunning = false;
+      _stopActionAnimation();
+      _pulseAnimationController.stop();
+      _shadowAnimationController.stop();
+      _pulseAnimationController.reset();
+      _shadowAnimationController.reset();
+    });
+  }
 
   void _startActionAnimation() {
-  _actionAnimationController.forward();
-}
+    _actionAnimationController.forward();
+  }
 
-void _stopActionAnimation() {
-  _actionAnimationController.reverse();
-}
+  void _stopActionAnimation() {
+    _actionAnimationController.reverse();
+  }
 
+  String _formatTime(int seconds) {
+    int hours = seconds ~/ 3600;
+    int minutes = (seconds % 3600) ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '$hours:${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,67 +125,92 @@ void _stopActionAnimation() {
       backgroundColor: AppColors.appMainBackground,
       appBar: AppBar(
         backgroundColor: AppColors.appSecondaryBackground,
-        title: const Text(
-          'Timer',
-          style: TextStyle(color: AppColors.appBlue),
+        title: Text(
+          _formatTime(_secondsElapsed),
+          style: const TextStyle(color: AppColors.appBlue, fontSize: 40),
         ),
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
             GestureDetector(
               onTap: _toggleTimer,
-              child: AnimatedBuilder(
-                animation: _pulseAnimation,
-                builder: (context, child) {
-                  return Transform.scale(
-                    scale: _pulseAnimation.value,
-                    child: Container(
-                      width: 200,
-                      height: 200,
-                      decoration: BoxDecoration(
-                        color: AppColors.appSecondaryBackground,
-                        borderRadius: BorderRadius.circular(100),
-                        boxShadow: [
-                          BoxShadow(
-                            color: _shadowAnimation.value!,
-                            spreadRadius: 5,
-                            blurRadius: 20,
-                            offset: const Offset(0, 0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 60),
+                  AnimatedBuilder(
+                    animation: _pulseAnimation,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _pulseAnimation.value,
+                        child: Container(
+                          width: 160,
+                          height: 160,
+                          decoration: BoxDecoration(
+                            color: AppColors.appSecondaryBackground,
+                            borderRadius: BorderRadius.circular(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: _shadowAnimation.value!,
+                                spreadRadius: 5,
+                                blurRadius: 20,
+                                offset: const Offset(0, 0),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Center(
-                      child: AnimatedIcon(
-                        icon: AnimatedIcons.play_pause,
-                        progress: _actionAnimationController,
-                        size: 100,
-                        color: _timerRunning ? AppColors.lightOrange : AppColors.appOrange,
-                      ),
-                    ),
-                    ),
-                  );
-                },
+                          child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: AnimatedIcon(
+                                    icon: AnimatedIcons.play_pause,
+                                    progress: _actionAnimationController,
+                                    size: 100,
+                                    color: _timerRunning
+                                        ? AppColors.lightOrange
+                                        : AppColors.appOrange,
+                                  ),
+                                ),
+                                Text(
+                                  _timerRunning ? 'Pause' : 'Play',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      color: _timerRunning
+                                          ? AppColors.darkGray
+                                          : AppColors.appBlue),
+                                ),
+                              ]),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Time Elapsed: $_secondsElapsed seconds',
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 120),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: _toggleTimer,
-                  child: Text(_timerRunning ? 'Stop Timer' : 'Start Timer'),
-                ),
-                const SizedBox(width: 20),
-                ElevatedButton(
                   onPressed: _resetTimer,
-                  child: const Text('Reset Timer'),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                      AppColors.appMainBackground,
+                    ),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  child: const Text(
+                    'Reset Timer',
+                    style: TextStyle(
+                      color: AppColors.shadowText,
+                    ),
+                  ),
                 ),
               ],
             ),
