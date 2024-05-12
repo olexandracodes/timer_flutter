@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:timer_flutter/data/database.dart';
 import 'package:timer_flutter/layout/nav_bar.dart';
 import 'package:timer_flutter/pages/ip_page.dart';
 import 'package:timer_flutter/pages/settings_page.dart';
 import 'package:timer_flutter/pages/timer_page.dart';
-import 'package:timer_flutter/src/app_styles.dart';
+import 'package:timer_flutter/src/app_styles.dart'; // Import SettingsPage
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const HomePage(),
+    );
+  }
+}
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,31 +29,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  IpDataBase db = IpDataBase();
-
   int _selectedIndex = 0;
-
-  Future<void> fetchData() async {
-    await db.loadData();
-  }
-
-  @override
-  void initState() {
-    fetchData();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   void _onTabTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (_selectedIndex == 2) {
-        _selectedIndex = 0;
-      }
     });
   }
 
@@ -47,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     final List<Widget> pages = [
       const TimerPage(),
       const IpInfoWiget(),
-      settingsPage(context),
+      const SettingsPage(), // Include SettingsPage only once
     ];
 
     return Scaffold(

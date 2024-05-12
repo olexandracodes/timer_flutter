@@ -41,6 +41,12 @@ dependencies:
   mapbox_gl: ^0.16.0
   map: ^1.4.2
   marquee: ^2.2.3
+  l10n_flutter: ^1.0.7
+
+
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.18.1
 
 
 dev_dependencies:
@@ -69,6 +75,9 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/i18n/en.json
+    - assets/i18n/de.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
