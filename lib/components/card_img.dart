@@ -8,7 +8,7 @@ class MapImageWidget extends StatelessWidget {
   late final MapController controller;
 
   MapImageWidget({Key? key, this.coordinates}) {
-    const double desiredDistance = 20;
+    const double desiredDistance = 50;
     final double pixelsPerMeter = 156543.03392 * cos(coordinates!.latitude * pi / 180) / pow(2, 18);
     final double zoom = log(156543.03392 * cos(coordinates!.latitude * pi / 180) / (desiredDistance * pixelsPerMeter)) / ln2;
 

@@ -49,8 +49,8 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
   }
 
   Future<Map<String, dynamic>> _fetchLocationData(String ipAddress) async {
-    final response = await http.get(
-        Uri.parse('https://geolocation-db.com/json/$ipAddress'));
+    final response =
+        await http.get(Uri.parse('https://geolocation-db.com/json/$ipAddress'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -72,8 +72,9 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.appSecondaryBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.appSecondaryBackground,
+        backgroundColor: AppColors.lightOrange,
         flexibleSpace: Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
@@ -89,9 +90,10 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
                   final locationData = snapshot.data!;
                   final ipAddress = locationData['IPv4'];
                   return Text(
-                    'IP Address: $ipAddress',
-                    style:
-                        TextStyle(color: AppColors.appBlue.withOpacity(0.7)),
+                    'IP: $ipAddress',
+                    style: TextStyle(
+                        color: AppColors.appBlue.withOpacity(0.7),
+                        fontSize: 32),
                   );
                 }
               },
@@ -106,8 +108,9 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
         ],
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          
+          const SizedBox(height: 40),
           Expanded(
             child: Center(
               child: FutureBuilder<Map<String, dynamic>>(
@@ -124,8 +127,28 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
                     final locationInfo =
                         'Latitude: $latitude\nLongitude: $longitude\n';
                     final coordinates =
-                      latlng.LatLng(latitude as double, longitude as double);
-                  return MapImageWidget(coordinates: coordinates);
+                        latlng.LatLng(latitude as double, longitude as double);
+                    return Padding(
+                      padding: const EdgeInsets.all(40.0),
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.appBlue.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 20,
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: MapImageWidget(coordinates: coordinates),
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
