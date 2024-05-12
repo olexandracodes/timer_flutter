@@ -47,6 +47,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.18.1
+  firebase_core: ^2.24.2
 
 
 dev_dependencies:
