@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:timer_flutter/components/card_img.dart';
 import 'package:timer_flutter/components/loading_dialog.dart';
 import 'package:timer_flutter/data/database.dart';
 import 'package:timer_flutter/src/app_styles.dart';
+import 'package:latlng/latlng.dart' as latlng;
 
 class IpInfoWiget extends StatefulWidget {
   const IpInfoWiget({Key? key}) : super(key: key);
@@ -47,8 +49,8 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
   }
 
   Future<Map<String, dynamic>> _fetchLocationData(String ipAddress) async {
-    final response =
-        await http.get(Uri.parse('https://geolocation-db.com/json/$ipAddress'));
+    final response = await http.get(
+        Uri.parse('https://geolocation-db.com/json/$ipAddress'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -88,7 +90,8 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
                   final ipAddress = locationData['IPv4'];
                   return Text(
                     'IP Address: $ipAddress',
-                    style: TextStyle(color: AppColors.appBlue.withOpacity(0.7)),
+                    style:
+                        TextStyle(color: AppColors.appBlue.withOpacity(0.7)),
                   );
                 }
               },
@@ -102,26 +105,33 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
           ),
         ],
       ),
-      body: Center(
-        child: FutureBuilder<Map<String, dynamic>>(
-          future: _ipData,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CustomProgressDialog();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else {
-              final locationData = snapshot.data!;
-              final latitude = locationData['latitude'];
-              final longitude = locationData['longitude'];
-              final locationInfo =
-                  'Latitude: $latitude\nLongitude: $longitude\n';
-              return SingleChildScrollView(
-                child: Text(locationInfo),
-              );
-            }
-          },
-        ),
+      body: Column(
+        children: [
+          
+          Expanded(
+            child: Center(
+              child: FutureBuilder<Map<String, dynamic>>(
+                future: _ipData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CustomProgressDialog();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    final locationData = snapshot.data!;
+                    final latitude = locationData['latitude'];
+                    final longitude = locationData['longitude'];
+                    final locationInfo =
+                        'Latitude: $latitude\nLongitude: $longitude\n';
+                    final coordinates =
+                      latlng.LatLng(latitude as double, longitude as double);
+                  return MapImageWidget(coordinates: coordinates);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
