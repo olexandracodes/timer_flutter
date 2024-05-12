@@ -1,0 +1,22 @@
+{
+  "name": "timer_flutter",
+  "version": "1.0.0",
+  "description": "Timer app",
+  "main": "main.dart",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+
+  "scripts": {
+    "build": "flutter build web --no-sound-null-safety"
+  },
+
+  
+  "repository": {
+    "type": "git",
+    "url": "timer_flutter"
+  },
+  "author": "Olexandra Kunytska",
+  "license": "ISC"
+}
