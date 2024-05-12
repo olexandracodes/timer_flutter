@@ -7,16 +7,16 @@
     "lib": "lib",
     "test": "test"
   },
-
   "scripts": {
     "build": "flutter build web"
   },
-
-  
   "repository": {
     "type": "git",
     "url": "timer_flutter"
   },
   "author": "Olexandra Kunytska",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^10.11.1"
+  }
 }
