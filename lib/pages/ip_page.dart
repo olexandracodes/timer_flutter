@@ -6,6 +6,7 @@ import 'package:timer_flutter/components/loading_dialog.dart';
 import 'package:timer_flutter/data/database.dart';
 import 'package:timer_flutter/src/app_styles.dart';
 import 'package:latlng/latlng.dart' as latlng;
+import 'package:marquee/marquee.dart';
 
 class IpInfoWiget extends StatefulWidget {
   const IpInfoWiget({Key? key}) : super(key: key);
@@ -169,52 +170,21 @@ class _IpInfoWigetState extends State<IpInfoWiget>
                                 ),
                               ),
                             ),
-                            SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0, 0.5),
-                                end: Offset.zero,
-                              ).animate(
-                                CurvedAnimation(
-                                  parent: _slideInAnimationController,
-                                  curve: Curves.easeInOut,
-                                ),
-                              ),
-                              child: Text(
-                                'Country: $country',
-                                style: const TextStyle(
-                                    fontSize: 40, color: AppColors.appBlue),
-                              ),
-                            ),
-                            SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(1, 0.7),
-                                end: Offset.zero,
-                              ).animate(
-                                CurvedAnimation(
-                                  parent: _slideInAnimationController,
-                                  curve: Curves.easeInOut,
-                                ),
-                              ),
-                              child: Text(
-                                'City: $city',
+                            SizedBox(
+                              height: 50,
+                              child: Marquee(
+                                text:
+                                    '      Country: $country       City: $city        Country Code: $countryCode',
                                 style: const TextStyle(
                                     fontSize: 30, color: AppColors.appBlue),
-                              ),
-                            ),
-                            SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(2, 1),
-                                end: Offset.zero,
-                              ).animate(
-                                CurvedAnimation(
-                                  parent: _slideInAnimationController,
-                                  curve: Curves.easeInOut,
-                                ),
-                              ),
-                              child: Text(
-                                'Country Code: $countryCode',
-                                style: const TextStyle(
-                                    fontSize: 20, color: AppColors.appBlue),
+                                velocity: 40,
+                                blankSpace: 20,
+                                accelerationDuration:
+                                    const Duration(seconds: 1),
+                                accelerationCurve: Curves.easeInOut,
+                                decelerationDuration:
+                                    const Duration(seconds: 1),
+                                decelerationCurve: Curves.easeInOut,
                               ),
                             ),
                           ],
