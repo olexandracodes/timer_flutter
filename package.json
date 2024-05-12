@@ -9,7 +9,7 @@
   },
 
   "scripts": {
-    "build": "flutter build web --no-sound-null-safety"
+    "build": "flutter build web"
   },
 
   
