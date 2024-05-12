@@ -32,7 +32,7 @@ class S {
       _currentLocalization = 'en';
     }
 
-    final String path = 'i18n/$_currentLocalization.json';
+    final String path = 'assets/i18n/$_currentLocalization.json';
     final data = await rootBundle.loadString(path);
     _localizedValues = json.decode(data) as Map<String, dynamic>;
   }
