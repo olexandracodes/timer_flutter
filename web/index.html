@@ -29,44 +29,35 @@
 		<!-- Favicon -->
 		<link rel="icon" type="image/png" href="favicon.png" />
 
-		<title>timer_flutter</title>
+		<title>Timer App</title>
 		<link rel="manifest" href="manifest.json" />
 
+		<link rel="manifest" href="manifest.json" />
 		<script>
 			// The value below is injected by flutter build, do not touch.
-			const serviceWorkerVersion = null;
+			var serviceWorkerVersion = null;
 		</script>
 		<!-- This script adds the flutter initialization JS code -->
-		<script src="https://www.gstatic.com/firebasejs/10.1.3/firebase-app.js"></script>
-		<script src="https://www.gstatic.com/firebasejs/10.1.3/firebase-database.js"></script>
-		<script>
-			// Initialize Firebase
-			const firebaseConfig = {
-				apiKey: "AIzaSyCTOGyAABOAUI0NnoClAcHOtuRB_THzgQE",
-				authDomain: "timer-45eb5.firebaseapp.com",
-				databaseURL:
-					"https://timer-45eb5-default-rtdb.europe-west1.firebasedatabase.app",
-				projectId: "timer-45eb5",
-				storageBucket: "timer-45eb5.appspot.com",
-				messagingSenderId: "898156769425",
-				appId: "1:898156769425:web:40dfedda512e5067708f30",
-			};
-			const firebaseApp = firebase.initializeApp(firebaseConfig);
+		<script src="flutter.js" defer></script>
+		<script type="text/javascript">
+			window.flutterWebRenderer = "html";
 		</script>
 	</head>
 	<body>
-		<script src="flutter.js" defer></script>
 		<script>
 			window.addEventListener("load", function (ev) {
 				// Download main.dart.js
 				_flutter.loader.loadEntrypoint({
+					entrypointUrl: "main.dart.js",
 					serviceWorker: {
+						serviceWorkerUrl: "flutter_service_worker.js?v=",
 						serviceWorkerVersion: serviceWorkerVersion,
 					},
-					onEntrypointLoaded: function (engineInitializer) {
-						engineInitializer.initializeEngine().then(function (appRunner) {
-							appRunner.runApp();
-						});
+					onEntrypointLoaded: async function (engineInitializer) {
+						// Initialize the Flutter engine
+						let appRunner = await engineInitializer.initializeEngine();
+						// Run the app
+						await appRunner.runApp();
 					},
 				});
 			});
