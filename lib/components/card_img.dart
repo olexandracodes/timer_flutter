@@ -18,7 +18,7 @@ class MapImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 150,
+      height: 200,
       child: MapLayout(
         controller: controller,
         builder: (context, transformer) {
