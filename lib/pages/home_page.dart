@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> {
     final List<Widget> pages = [
       const TimerPage(),
       const IpInfoWiget(),
-      const SettingsPage(), // Include SettingsPage only once
+      const SettingsPage(),
     ];
 
     return Scaffold(
