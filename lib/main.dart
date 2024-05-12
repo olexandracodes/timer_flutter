@@ -6,6 +6,15 @@ import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+        apiKey: "AIzaSyB9EQ4LkFdYutKx4baDUIEIJIwu_oe6lf8",
+        authDomain: "timer-ip-flutter.firebaseapp.com",
+        projectId: "timer-ip-flutter",
+        storageBucket: "timer-ip-flutter.appspot.com",
+        messagingSenderId: "199670623917",
+        appId: "1:199670623917:web:089b0ddae0bc6eda846024"),
+  );
   runApp(const MyApp());
 }
 
