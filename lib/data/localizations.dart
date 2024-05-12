@@ -32,9 +32,18 @@ class S {
       _currentLocalization = 'en';
     }
 
-    final String path = 'assets/i18n/$_currentLocalization.json';
-    final data = await rootBundle.loadString(path);
-    _localizedValues = json.decode(data) as Map<String, dynamic>;
+    final String path = 'i18n/$_currentLocalization.json';
+
+    if (await rootBundle.load(path).catchError((error) {
+          print('Error loading localization file: $error');
+          return null;
+        }) !=
+        null) {
+      final data = await rootBundle.loadString(path);
+      _localizedValues = json.decode(data) as Map<String, dynamic>;
+    } else {
+      print('Localization file not found: $path');
+    }
   }
 
   static Locale locale = const Locale('en', 'US');
