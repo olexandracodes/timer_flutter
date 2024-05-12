@@ -35,6 +35,14 @@ class IpDataBase {
     final jsonData = json.encode(ipData);
     await _prefs!.setString('ipData', jsonData);
   }
+
+  Map<String, dynamic>? getLastSuccessfulData() {
+    if (ipData.isNotEmpty) {
+      return ipData.last;
+    } else {
+      return null;
+    }
+  }
 }
 
 extension IterableExtensions<T> on Iterable<T> {

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:timer_flutter/components/loading_dialog.dart';
+import 'package:timer_flutter/data/database.dart';
 import 'package:timer_flutter/src/app_styles.dart';
 
 class IpInfoWiget extends StatefulWidget {
@@ -13,22 +14,35 @@ class IpInfoWiget extends StatefulWidget {
 
 class _IpInfoWigetState extends State<IpInfoWiget> {
   late Future<Map<String, dynamic>> _ipData;
+  late IpDataBase _ipDataBase;
 
   @override
   void initState() {
     super.initState();
+    _ipDataBase = IpDataBase();
     _ipData = _fetchIpData();
   }
 
   Future<Map<String, dynamic>> _fetchIpData() async {
-    final response =
-        await http.get(Uri.parse('https://api.ipify.org?format=json'));
-    if (response.statusCode == 200) {
-      final ipData = json.decode(response.body);
-      final ipAddress = ipData['ip'];
-      return _fetchLocationData(ipAddress);
+    final lastSuccessfulData = _ipDataBase.getLastSuccessfulData();
+    if (lastSuccessfulData != null) {
+      return Future.value(lastSuccessfulData);
     } else {
-      throw Exception('Failed to load IP data');
+      try {
+        final response =
+            await http.get(Uri.parse('https://api.ipify.org?format=json'));
+        if (response.statusCode == 200) {
+          final ipData = json.decode(response.body);
+          final ipAddress = ipData['ip'];
+          final locationData = await _fetchLocationData(ipAddress);
+          await _ipDataBase.updateDataBase(locationData);
+          return locationData;
+        } else {
+          throw Exception('Failed to load IP data');
+        }
+      } catch (e) {
+        throw Exception('Failed to load IP data: $e');
+      }
     }
   }
 
@@ -39,6 +53,17 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to load location data');
+    }
+  }
+
+  Future<void> _reloadIpData() async {
+    try {
+      final newData = await _fetchIpData();
+      setState(() {
+        _ipData = Future.value(newData);
+      });
+    } catch (e) {
+      print('Error reloading IP data: $e');
     }
   }
 
@@ -70,6 +95,12 @@ class _IpInfoWigetState extends State<IpInfoWiget> {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _reloadIpData,
+          ),
+        ],
       ),
       body: Center(
         child: FutureBuilder<Map<String, dynamic>>(
