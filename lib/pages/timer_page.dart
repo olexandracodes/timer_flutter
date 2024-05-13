@@ -124,7 +124,11 @@ class _TimerPageState extends State<TimerPage> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: AppColors.appMainBackground,
       appBar: AppBar(
-        backgroundColor: AppColors.appSecondaryBackground,
+        toolbarOpacity: 0,
+        bottomOpacity: 0,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      
         title: Text(
           _formatTime(_secondsElapsed),
           style: const TextStyle(color: AppColors.appBlue, fontSize: 40),

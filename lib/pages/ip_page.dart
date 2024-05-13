@@ -126,74 +126,81 @@ class _IpInfoWigetState extends State<IpInfoWiget>
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                children: [
-                  FutureBuilder<Map<String, dynamic>>(
-                    future: _ipData,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CustomProgressDialog();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else {
-                        final locationData = snapshot.data!;
-                        final latitude = locationData['latitude'];
-                        final longitude = locationData['longitude'];
-                        final country = locationData['country_name'];
-                        final city = locationData['city'];
-                        final countryCode = locationData['country_code'];
-                        final coordinates = latlng.LatLng(
-                            latitude as double, longitude as double);
-                        return Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 20.0),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 400),
-                                curve: Curves.easeInExpo,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.appBlue.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 20,
+            child: Column(
+              children: [
+                FutureBuilder<Map<String, dynamic>>(
+                  future: _ipData,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CustomProgressDialog();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      final locationData = snapshot.data!;
+                      final latitude = locationData['latitude'];
+                      final longitude = locationData['longitude'];
+                      final country = locationData['country_name'];
+                      final city = locationData['city'];
+                      final countryCode = locationData['country_code'];
+                      final coordinates = latlng.LatLng(
+                          latitude as double, longitude as double);
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 20.0),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeInExpo,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.appBlue.withOpacity(0.4),
+                                    spreadRadius: 5,
+                                    blurRadius: 40,
+                                  ),
+                                ],
+                              ),
+                              child: ClipRRect(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20.0),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 400),
+                                    curve: Curves.easeInExpo,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(40.0),
+                                        child: MapImageWidget(
+                                            coordinates: coordinates),
+                                      ),
                                     ),
-                                  ],
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child:
-                                      MapImageWidget(coordinates: coordinates),
+                                  ),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 50,
-                              child: Marquee(
-                                text:
-                                    '      Country: $country       City: $city        Country Code: $countryCode',
-                                style: const TextStyle(
-                                    fontSize: 30, color: AppColors.appBlue),
-                                velocity: 40,
-                                blankSpace: 20,
-                                accelerationDuration:
-                                    const Duration(seconds: 1),
-                                accelerationCurve: Curves.easeInOut,
-                                decelerationDuration:
-                                    const Duration(seconds: 1),
-                                decelerationCurve: Curves.easeInOut,
-                              ),
+                          ),
+                          SizedBox(
+                            height: 50,
+                            child: Marquee(
+                              text:
+                                  '      Country: $country       City: $city        Country Code: $countryCode',
+                              style: const TextStyle(
+                                  fontSize: 30, color: AppColors.appBlue),
+                              velocity: 40,
+                              blankSpace: 20,
+                              accelerationDuration: const Duration(seconds: 1),
+                              accelerationCurve: Curves.easeInOut,
+                              decelerationDuration: const Duration(seconds: 1),
+                              decelerationCurve: Curves.easeInOut,
                             ),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-                ],
-              ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ],

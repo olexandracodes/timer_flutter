@@ -11,10 +11,6 @@ class CustomProgressDialog extends StatelessWidget {
       child: Container(
         width: MediaQuery.of(context).size.width * 0.4,
         padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: AppColors.appSecondaryBackground,
-          borderRadius: BorderRadius.circular(8.0),
-        ),
         child: const Column(
           mainAxisSize: MainAxisSize.min,
           children: [
