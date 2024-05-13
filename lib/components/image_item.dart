@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/link.dart';
+import 'package:timer_flutter/components/webview_container.dart';
 import 'package:timer_flutter/pages/settings_page.dart';
 import 'package:timer_flutter/src/app_styles.dart';
 
@@ -36,7 +36,6 @@ class _ImageItemState extends State<ImageItem> {
       _rating = rating;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -130,18 +129,14 @@ class _ImageItemState extends State<ImageItem> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Link(
-                          uri: Uri.parse(
-                              'https://energise.notion.site/Flutter-f86d340cadb34e9cb1ef092df4e566b7'),
-                          target: LinkTarget.blank,
-                          builder: (BuildContext ctx, FollowLink? openLink) {
-                            return TextButton.icon(
-                              onPressed: openLink,
-                              label: const Text(''),
-                              icon: const Icon(Icons.share,
-                                  color: AppColors.appBlue),
-                            );
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const WebViewContainer()));
                           },
+                          icon: const Icon(Icons.share),
+                          color: AppColors.appBlue,
                         ),
                       ],
                     ),

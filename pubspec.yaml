@@ -49,6 +49,9 @@ dependencies:
   intl: ^0.18.1
   firebase_core: ^2.24.2
   url_launcher: ^6.2.4
+  webview_flutter: ^4.5.0
+  webview_flutter_wkwebview: ^3.10.2
+  webview_flutter_android: ^3.16.1
 
 
 dev_dependencies:

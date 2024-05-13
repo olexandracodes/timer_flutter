@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:timer_flutter/components/webview_container.dart';
 import 'package:timer_flutter/layout/nav_bar.dart';
 import 'package:timer_flutter/pages/ip_page.dart';
 import 'package:timer_flutter/pages/settings_page.dart';
 import 'package:timer_flutter/pages/timer_page.dart';
-import 'package:timer_flutter/src/app_styles.dart'; // Import SettingsPage
+import 'package:timer_flutter/src/app_styles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const TimerPage(),
+        '/task': (context) => const WebViewContainer(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/task') {
+          return MaterialPageRoute(
+            builder: (context) => const WebViewContainer(),
+          );
+        }
+        return null;
+      },
     );
   }
 }
