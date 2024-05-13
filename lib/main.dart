@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:timer_flutter/data/localizations.dart';
+import 'package:timer_flutter/utils/localizations.dart';
 import 'package:timer_flutter/pages/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 

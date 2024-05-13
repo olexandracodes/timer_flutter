@@ -1,6 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:timer_flutter/data/localizations.dart';
+import 'package:timer_flutter/components/image_grid.dart';
+import 'package:timer_flutter/utils/fetch_from_unsplash.dart';
+import 'package:timer_flutter/utils/localizations.dart';
 import 'package:timer_flutter/src/app_styles.dart';
+
+class ImageObject {
+  final String imageId;
+  final String image;
+  final String? longName;
+  final int? likes;
+  final String? altDescription;
+  final User? user;
+
+  ImageObject({
+    required this.imageId,
+    required this.image,
+    required this.longName,
+    this.likes,
+    String? altDescription,
+    this.user,
+  }) : altDescription = altDescription ?? '';
+}
+
+class User {
+  final String username;
+  final String name;
+  final String bio;
+  final String instagramUsername;
+  final String location;
+
+  User({
+    required this.username,
+    required this.name,
+    required this.bio,
+    required this.instagramUsername,
+    required this.location,
+  });
+}
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -12,6 +48,24 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   late S _localizations;
   late bool _isEnglish;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  List<ImageObject> unsplashItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUnsplashImageObjects().then((fetchedItems) {
+      setState(() {
+        unsplashItems = fetchedItems;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -51,27 +105,29 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                S.of(context).welcome,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+      body: ListView(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        children: [
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  S.of(context).welcome,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 25),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text(S.of(context).hello),
-              ),
-              const SizedBox(height: 25),
-            ],
+                const SizedBox(height: 25),
+                ImageGrid(
+                  itemsList: unsplashItems,
+                ),
+                const SizedBox(height: 25),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

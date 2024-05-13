@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:timer_flutter/components/card_img.dart';
 import 'package:timer_flutter/components/loading_dialog.dart';
-import 'package:timer_flutter/data/database.dart';
+import 'package:timer_flutter/utils/database.dart';
 import 'package:timer_flutter/src/app_styles.dart';
 import 'package:latlng/latlng.dart' as latlng;
 import 'package:marquee/marquee.dart';
