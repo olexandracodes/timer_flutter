@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:timer_flutter/components/image_item.dart';
 import 'package:timer_flutter/pages/settings_page.dart';
 
-
 class ImageGrid extends StatefulWidget {
   final List<ImageObject>? itemsList;
 
@@ -51,8 +50,6 @@ class _ImageGridState extends State<ImageGrid> {
                 focusColor: Colors.transparent,
                 hoverColor: Colors.transparent,
                 highlightColor: Colors.transparent,
-                
-                
                 child: ImageItem(imageItem: product, key: Key(product.imageId)),
               ),
             );

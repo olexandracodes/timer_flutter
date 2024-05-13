@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:timer_flutter/components/image_grid.dart';
+import 'package:timer_flutter/components/loading_dialog.dart';
 import 'package:timer_flutter/utils/fetch_from_unsplash.dart';
 import 'package:timer_flutter/utils/localizations.dart';
 import 'package:timer_flutter/src/app_styles.dart';
@@ -48,6 +49,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   late S _localizations;
   late bool _isEnglish;
+  late bool _isLoading = true;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
   List<ImageObject> unsplashItems = [];
@@ -58,6 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
     fetchUnsplashImageObjects().then((fetchedItems) {
       setState(() {
         unsplashItems = fetchedItems;
+        _isLoading = false;
       });
     });
   }
@@ -106,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         children: [
           Center(
             child: Column(
@@ -120,9 +123,11 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
                 const SizedBox(height: 25),
-                ImageGrid(
-                  itemsList: unsplashItems,
-                ),
+                _isLoading
+                    ? const CustomProgressDialog()
+                    : ImageGrid(
+                        itemsList: unsplashItems,
+                      ),
                 const SizedBox(height: 25),
               ],
             ),

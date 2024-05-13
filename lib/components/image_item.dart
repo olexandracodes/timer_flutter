@@ -1,12 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/link.dart';
 import 'package:timer_flutter/pages/settings_page.dart';
 import 'package:timer_flutter/src/app_styles.dart';
 
-
-class ImageItem extends StatelessWidget {
+class ImageItem extends StatefulWidget {
   final ImageObject imageItem;
 
-  const ImageItem({super.key, required this.imageItem});
+  const ImageItem({Key? key, required this.imageItem}) : super(key: key);
+
+  @override
+  _ImageItemState createState() => _ImageItemState();
+}
+
+class _ImageItemState extends State<ImageItem> {
+  late int _rating = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRating();
+  }
+
+  Future<void> _loadRating() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _rating = prefs.getInt(widget.imageItem.imageId) ?? 0;
+    });
+  }
+
+  Future<void> _saveRating(int rating) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(widget.imageItem.imageId, rating);
+    setState(() {
+      _rating = rating;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +47,7 @@ class ImageItem extends StatelessWidget {
         focusColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        
+        onTap: () => setState(() {}),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -37,15 +67,15 @@ class ImageItem extends StatelessWidget {
             children: [
               Expanded(
                 child: Hero(
-                  tag: imageItem.image,
+                  tag: widget.imageItem.image,
                   transitionOnUserGestures: true,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.network(
-                      imageItem.image,
+                      widget.imageItem.image,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      semanticLabel: imageItem.altDescription,
+                      semanticLabel: widget.imageItem.altDescription,
                     ),
                   ),
                 ),
@@ -60,17 +90,17 @@ class ImageItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 4),
                       child: Text(
-                        imageItem.longName!.toUpperCase(),
+                        widget.imageItem.longName!.toUpperCase(),
                         style: const TextStyle(
                           color: AppColors.appBlue,
                           fontWeight: FontWeight.bold,
-                        )
+                        ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
                       child: Text(
-                        '@${imageItem.user!.username}',
+                        '@${widget.imageItem.user!.username}',
                         style: const TextStyle(
                           color: AppColors.appBlue,
                         ),
@@ -79,23 +109,42 @@ class ImageItem extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
                       child: Text(
-                        imageItem.user!.location,
+                        widget.imageItem.user!.location,
                         style: const TextStyle(
                           color: AppColors.appBlue,
                         ),
                       ),
                     ),
-                    if (imageItem.likes != 0)
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                        child: Text(
-                          'Likes: ${imageItem.likes}',
-                          style: const TextStyle(
-                            color: AppColors.appBlue,
+                    Row(
+                      children: List.generate(4, (index) {
+                        final isSelected = index < _rating;
+                        return GestureDetector(
+                          onTap: () => _saveRating(index + 1),
+                          child: Icon(
+                            isSelected ? Icons.star : Icons.star_border,
+                            color: isSelected ? AppColors.appOrange : null,
                           ),
+                        );
+                      }),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Link(
+                          uri: Uri.parse(
+                              'https://energise.notion.site/Flutter-f86d340cadb34e9cb1ef092df4e566b7'),
+                          target: LinkTarget.blank,
+                          builder: (BuildContext ctx, FollowLink? openLink) {
+                            return TextButton.icon(
+                              onPressed: openLink,
+                              label: const Text(''),
+                              icon: const Icon(Icons.share,
+                                  color: AppColors.appBlue),
+                            );
+                          },
                         ),
-                      ),
-                    
+                      ],
+                    ),
                   ],
                 ),
               ),
