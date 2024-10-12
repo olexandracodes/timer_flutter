@@ -38,7 +38,7 @@ The third page features an **adaptive image gallery** powered by an open API. Us
 - Smooth navigation through images with a clean, responsive layout
 
 <div align="center">
-  <img src="screenshots/gallery.png" alt="Image Gallery" width="600"/>
+  <img src="screenshots/gallery.png" alt="Image Gallery" width="800"/>
   <img src="screenshots/mobile_gallery.png" alt="Mobile Image Gallery" width="200"/>
 </div>
 
