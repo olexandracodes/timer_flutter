@@ -57,3 +57,7 @@ The third page features an **adaptive image gallery** powered by an open API. Us
 1. **Timer Page**: Start, stop, or reset the timer to keep track of time visually.
 2. **Map Page**: Automatically shows your location on the map based on your device’s IP, and provides information about the country and city.
 3. **Gallery Page**: Browse through a gallery of images, and toggle between English and German for the UI language.
+
+ ## Author
+ 
+Made with 🧡 by [Olexandra Kunytska](https://github.com/olexandracodes)
